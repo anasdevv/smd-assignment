@@ -11,7 +11,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await SeedData.seedData();
+  // await SeedData.seedData();
   runApp(const MyApp());
 }
 
