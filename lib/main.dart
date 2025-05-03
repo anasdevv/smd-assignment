@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'features/authentication/presentation/pages/login_page.dart';
+import 'core/router/app_router.dart';
 import 'firebase_options.dart';
 
 import 'core/data/seed_data.dart';
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Study Group Organizer',
       theme: ThemeData(
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const LoginPage(),
+      routerConfig: router,
     );
   }
 }
