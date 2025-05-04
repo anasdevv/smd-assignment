@@ -1,5 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smd_project/features/authentication/data/data_sources/auth_remote_data_source_impl.dart';
+import 'package:smd_project/features/authentication/data/repositories/auth_repository_impl.dart';
+import 'package:smd_project/features/authentication/data/repositories/user_repository_impl.dart';
+import 'package:smd_project/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'core/router/app_router.dart';
 import 'firebase_options.dart';
 
@@ -11,9 +16,21 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  final authRepository = AuthRepositoryImpl(
+    remoteDataSource: AuthRemoteDataSourceImpl(),
+    userRepository: UserRepositoryImpl(),
+  );
   // await SeedData.seedData();
-  runApp(const MyApp());
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(
+          create: (context) => AuthBloc(authRepository: authRepository),
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
