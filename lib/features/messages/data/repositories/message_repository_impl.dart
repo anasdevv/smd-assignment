@@ -22,8 +22,6 @@ class MessageRepositoryImpl implements MessageRepository {
       senderName: message.senderName,
       timestamp: message.timestamp,
       readBy: message.readBy,
-      attachmentUrl: message.attachmentUrl,
-      attachmentType: message.attachmentType,
     );
 
     await _getMessagesCollection(groupId)
