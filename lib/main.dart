@@ -11,6 +11,8 @@ import 'package:smd_project/features/authentication/data/repositories/user_repos
 import 'package:smd_project/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:smd_project/features/groups/data/repositories/group_repository_impl.dart';
 import 'package:smd_project/features/groups/presentation/bloc/groups_bloc.dart';
+import 'package:smd_project/features/messages/data/repositories/message_repository_impl.dart';
+import 'package:smd_project/features/messages/presentation/bloc/messages_bloc.dart';
 import 'core/router/app_router.dart';
 import 'firebase_options.dart';
 
@@ -24,8 +26,12 @@ void main() async {
     remoteDataSource: AuthRemoteDataSourceImpl(),
     userRepository: UserRepositoryImpl(),
   );
+
   final groupRepository =
       GroupRepositoryImpl(firestore: FirebaseFirestore.instance);
+
+  final messageRepository =
+      MessageRepositoryImpl(firestore: FirebaseFirestore.instance);
   // await SeedData.seedData();
 
   // Initialize storage based on platform
@@ -45,6 +51,10 @@ void main() async {
         ),
         BlocProvider<GroupBloc>(
           create: (context) => GroupBloc(groupRepository: groupRepository),
+        ),
+        BlocProvider<MessagesBloc>(
+          create: (context) =>
+              MessagesBloc(messagesRepository: messageRepository),
         ),
       ],
       child: MyApp(),

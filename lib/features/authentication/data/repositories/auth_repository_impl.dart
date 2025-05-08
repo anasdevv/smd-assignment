@@ -18,9 +18,6 @@ class AuthRepositoryImpl implements AuthRepository {
     final userCredential =
         await remoteDataSource.signInWithEmailAndPassword(email, password);
     final user = await userRepository.getUser(userCredential.user!.uid);
-    if (user == null) {
-      throw Exception('User not found in Firestore');
-    }
     return user as UserModel;
   }
 
