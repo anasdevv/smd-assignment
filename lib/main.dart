@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:smd_project/features/authentication/data/data_sources/auth_remote_data_source_impl.dart';
 import 'package:smd_project/features/authentication/data/repositories/auth_repository_impl.dart';
 import 'package:smd_project/features/authentication/data/repositories/user_repository_impl.dart';
@@ -24,6 +27,16 @@ void main() async {
   final groupRepository =
       GroupRepositoryImpl(firestore: FirebaseFirestore.instance);
   // await SeedData.seedData();
+
+  // Initialize storage based on platform
+  final storage = await HydratedStorage.build(
+    storageDirectory: kIsWeb
+        ? await HydratedStorage.webStorageDirectory
+        : await getTemporaryDirectory(),
+  );
+
+  // Initialize HydratedBloc
+  HydratedBloc.storage = storage;
   runApp(
     MultiBlocProvider(
       providers: [
