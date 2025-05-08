@@ -6,11 +6,29 @@ abstract class AuthState extends Equatable {
 
   @override
   List<Object?> get props => [];
+
+  Map<String, dynamic> toJson();
 }
 
-class AuthInitial extends AuthState {}
+class AuthInitial extends AuthState {
+  const AuthInitial();
 
-class AuthLoading extends AuthState {}
+  @override
+  Map<String, dynamic> toJson() => {'type': 'AuthInitial'};
+
+  factory AuthInitial.fromJson(Map<String, dynamic> json) =>
+      const AuthInitial();
+}
+
+class AuthLoading extends AuthState {
+  const AuthLoading();
+
+  @override
+  Map<String, dynamic> toJson() => {'type': 'AuthLoading'};
+
+  factory AuthLoading.fromJson(Map<String, dynamic> json) =>
+      const AuthLoading();
+}
 
 class Authenticated extends AuthState {
   final UserModel user;
@@ -19,9 +37,28 @@ class Authenticated extends AuthState {
 
   @override
   List<Object> get props => [user];
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'Authenticated',
+        'user': user.toJson(),
+      };
+
+  factory Authenticated.fromJson(Map<String, dynamic> json) {
+    return Authenticated(
+        UserModel.fromJson(json['user'] as Map<String, dynamic>));
+  }
 }
 
-class Unauthenticated extends AuthState {}
+class Unauthenticated extends AuthState {
+  const Unauthenticated();
+
+  @override
+  Map<String, dynamic> toJson() => {'type': 'Unauthenticated'};
+
+  factory Unauthenticated.fromJson(Map<String, dynamic> json) =>
+      const Unauthenticated();
+}
 
 class AuthError extends AuthState {
   final String message;
@@ -30,4 +67,14 @@ class AuthError extends AuthState {
 
   @override
   List<Object> get props => [message];
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'AuthError',
+        'message': message,
+      };
+
+  factory AuthError.fromJson(Map<String, dynamic> json) {
+    return AuthError(json['message'] as String);
+  }
 }

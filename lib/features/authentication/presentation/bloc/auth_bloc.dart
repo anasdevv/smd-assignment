@@ -1,9 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:smd_project/features/authentication/domain/repositories/auth_repository.dart';
 import 'package:smd_project/features/authentication/presentation/bloc/auth_event.dart';
 import 'package:smd_project/features/authentication/presentation/bloc/auth_state.dart';
 
-class AuthBloc extends Bloc<AuthEvent, AuthState> {
+class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
 
   AuthBloc({required this.authRepository}) : super(AuthInitial()) {
@@ -13,6 +14,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<ResetPasswordRequested>(_onResetPasswordRequested);
     on<CheckAuthStatus>(_onCheckAuthStatus);
     on<FetchUser>(_onFetchUser);
+  }
+
+  @override
+  AuthState? fromJson(Map<String, dynamic> json) {
+    try {
+      final type = json['type'] as String;
+      switch (type) {
+        case 'AuthInitial':
+          return AuthInitial.fromJson(json);
+        case 'AuthLoading':
+          return AuthLoading.fromJson(json);
+        case 'Authenticated':
+          return Authenticated.fromJson(json);
+        case 'Unauthenticated':
+          return Unauthenticated.fromJson(json);
+        case 'AuthError':
+          return AuthError.fromJson(json);
+        default:
+          return AuthInitial();
+      }
+    } catch (e) {
+      return AuthInitial();
+    }
+  }
+
+  @override
+  Map<String, dynamic>? toJson(AuthState state) {
+    return state.toJson();
   }
 
   Future<void> _onSignInRequested(
@@ -90,7 +119,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  // Fetch user handler
   Future<void> _onFetchUser(
     FetchUser event,
     Emitter<AuthState> emit,
