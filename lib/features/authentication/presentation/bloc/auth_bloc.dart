@@ -12,6 +12,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignOutRequested>(_onSignOutRequested);
     on<ResetPasswordRequested>(_onResetPasswordRequested);
     on<CheckAuthStatus>(_onCheckAuthStatus);
+    on<FetchUser>(_onFetchUser);
   }
 
   Future<void> _onSignInRequested(
@@ -86,6 +87,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } catch (e) {
       emit(AuthError(e.toString()));
+    }
+  }
+
+  // Fetch user handler
+  Future<void> _onFetchUser(
+    FetchUser event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    try {
+      final user = await authRepository.getCurrentUser();
+      if (user != null) {
+        emit(Authenticated(user));
+      } else {
+        emit(AuthError("User not found"));
+      }
+    } catch (e) {
+      emit(AuthError("Failed to fetch User"));
     }
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:country_picker/country_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smd_project/features/authentication/presentation/bloc/auth_event.dart';
 import 'package:smd_project/features/authentication/presentation/bloc/auth_state.dart';
@@ -23,7 +22,6 @@ class _SignUpPageState extends State<SignUpPage> {
   final _confirmPasswordController = TextEditingController();
   final _displayNameController = TextEditingController();
 
-  String _selectedCountry = '';
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 

@@ -40,3 +40,5 @@ class ResetPasswordRequested extends AuthEvent {
 }
 
 class CheckAuthStatus extends AuthEvent {}
+
+class FetchUser extends AuthEvent {}
