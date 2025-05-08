@@ -4,8 +4,6 @@ import 'package:smd_project/features/authentication/presentation/bloc/auth_event
 import 'package:smd_project/features/authentication/presentation/bloc/auth_state.dart';
 import 'package:smd_project/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:smd_project/features/authentication/presentation/widgets/auth_guard.dart';
-import 'signup_page.dart';
-import 'forgot_password_page.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
