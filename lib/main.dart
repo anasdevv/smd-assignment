@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,10 +6,10 @@ import 'package:smd_project/features/authentication/data/data_sources/auth_remot
 import 'package:smd_project/features/authentication/data/repositories/auth_repository_impl.dart';
 import 'package:smd_project/features/authentication/data/repositories/user_repository_impl.dart';
 import 'package:smd_project/features/authentication/presentation/bloc/auth_bloc.dart';
+import 'package:smd_project/features/groups/data/repositories/group_repository_impl.dart';
+import 'package:smd_project/features/groups/presentation/bloc/groups_bloc.dart';
 import 'core/router/app_router.dart';
 import 'firebase_options.dart';
-
-import 'core/data/seed_data.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,12 +21,17 @@ void main() async {
     remoteDataSource: AuthRemoteDataSourceImpl(),
     userRepository: UserRepositoryImpl(),
   );
+  final groupRepository =
+      GroupRepositoryImpl(firestore: FirebaseFirestore.instance);
   // await SeedData.seedData();
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
           create: (context) => AuthBloc(authRepository: authRepository),
+        ),
+        BlocProvider<GroupBloc>(
+          create: (context) => GroupBloc(groupRepository: groupRepository),
         ),
       ],
       child: MyApp(),
