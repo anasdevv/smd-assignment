@@ -4,6 +4,7 @@ import 'package:smd_project/features/authentication/presentation/pages/login_pag
 import 'package:smd_project/features/authentication/presentation/pages/signup_page.dart';
 import 'package:smd_project/features/authentication/presentation/pages/forgot_password_page.dart';
 import 'package:smd_project/features/home/presentation/pages/home_page.dart';
+import 'package:smd_project/features/groups/presentation/pages/create_groups_page.dart';
 
 final router = GoRouter(
   initialLocation: '/login',
@@ -43,6 +44,10 @@ final router = GoRouter(
     GoRoute(
       path: '/home',
       builder: (context, state) => const HomePage(),
+    ),
+    GoRoute(
+      path: '/create-group',
+      builder: (context, state) => const CreateGroupPage(),
     ),
   ],
 );

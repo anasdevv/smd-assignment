@@ -30,7 +30,20 @@ class GroupError extends GroupState {
   List<Object> get props => [message];
 }
 
+
+class GroupCreating extends GroupState {}
+
+
 class GroupCreated extends GroupState {}
+
+class GroupCreationError extends GroupState {
+  final String message;
+
+  const GroupCreationError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
 
 class GroupUpdated extends GroupState {}
 

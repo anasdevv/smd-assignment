@@ -8,6 +8,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
 
   GroupBloc({required this.groupRepository}) : super(GroupInitial()) {
     on<GetUserGroups>(_onGetUserGroups);
+    on<CreateGroupEvent>(_onCreateGroup);
   }
 
   Future<void> _onGetUserGroups(
@@ -25,4 +26,20 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
       emit(GroupError(e.toString()));
     }
   }
+
+
+  Future<void> _onCreateGroup(
+  CreateGroupEvent event,
+  Emitter<GroupState> emit,
+) async {
+  emit(GroupCreating());
+  try {
+    await groupRepository.createGroup(event.group);
+    emit(GroupCreated());
+  } catch (e) {
+    emit(GroupCreationError(e.toString()));
+  }
+}
+
+
 }
