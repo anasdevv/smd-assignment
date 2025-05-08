@@ -24,6 +24,7 @@ class GroupRepositoryImpl implements GroupRepository {
       members: group.members,
       isPublic: group.isPublic,
       tags: group.tags,
+      isJoined: group.isJoined,
     );
 
     await _groupsCollection.doc(group.id).set(groupModel.toMap());
@@ -42,6 +43,7 @@ class GroupRepositoryImpl implements GroupRepository {
       members: group.members,
       isPublic: group.isPublic,
       tags: group.tags,
+      isJoined: group.isJoined,
     );
 
     await _groupsCollection.doc(group.id).update(groupModel.toMap());
@@ -176,4 +178,23 @@ class GroupRepositoryImpl implements GroupRepository {
       'reminders': FieldValue.arrayRemove([reminderId])
     });
   }
+
+  @override
+Stream<List<GroupEntity>> getAllGroupsStream() {
+  return _groupsCollection.snapshots().map(
+    (snapshot) => snapshot.docs
+        .map((doc) =>
+            GroupModel.fromMap(doc.id, doc.data() as Map<String, dynamic>))
+        .toList(),
+  );
+}
+
+@override
+Future<GroupEntity> getGroupById(String groupId) async {
+  final doc = await _groupsCollection.doc(groupId).get();
+  if (!doc.exists) throw Exception("Group not found");
+  return GroupModel.fromMap(doc.id, doc.data() as Map<String, dynamic>);
+}
+
+  
 }

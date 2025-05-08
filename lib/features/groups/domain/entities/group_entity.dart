@@ -11,6 +11,8 @@ class GroupEntity extends Equatable {
   final List<String> members;
   final bool isPublic;
   final List<String> tags;
+  final bool isJoined;
+
 
   const GroupEntity({
     required this.id,
@@ -23,6 +25,7 @@ class GroupEntity extends Equatable {
     required this.members,
     required this.isPublic,
     required this.tags,
+    this.isJoined = false,
   });
 
   @override

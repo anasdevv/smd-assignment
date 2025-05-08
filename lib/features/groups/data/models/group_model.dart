@@ -13,6 +13,7 @@ class GroupModel extends GroupEntity {
     required super.members,
     required super.isPublic,
     required super.tags,
+    required super.isJoined,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,21 +27,23 @@ class GroupModel extends GroupEntity {
       'members': members,
       'isPublic': isPublic,
       'tags': tags,
+      'isJoined': isJoined,
     };
   }
 
   factory GroupModel.fromMap(String id, Map<String, dynamic> map) {
     return GroupModel(
       id: id,
-      name: map['name'] as String,
-      subject: map['subject'] as String,
-      description: map['description'] as String,
-      createdAt: (map['createdAt'] as Timestamp).toDate(),
-      createdBy: map['createdBy'] as String,
-      leaderId: map['leaderId'] as String,
+      name: map['name'] as String? ?? '',
+      subject: map['subject'] as String? ?? '',
+      description: map['description'] as String? ?? '',
+      createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      createdBy: map['createdBy'] as String? ?? '',
+      leaderId: map['leaderId'] as String? ?? '',
       members: List<String>.from(map['members'] ?? []),
-      isPublic: map['isPublic'] as bool,
+      isPublic: map['isPublic'] as bool? ?? false,
       tags: List<String>.from(map['tags'] ?? []),
+      isJoined: map['isJoined'] as bool? ?? false,
     );
   }
 
@@ -54,6 +57,7 @@ class GroupModel extends GroupEntity {
     List<String>? members,
     bool? isPublic,
     List<String>? tags,
+    bool? isJoined,
   }) {
     return GroupModel(
       id: id,
@@ -66,6 +70,7 @@ class GroupModel extends GroupEntity {
       members: members ?? this.members,
       isPublic: isPublic ?? this.isPublic,
       tags: tags ?? this.tags,
+      isJoined: isJoined ?? this.isJoined,
     );
   }
 }

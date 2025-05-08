@@ -131,13 +131,13 @@ class HomePage extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      context.go('/create-group');
+                      context.go('/home/create-group');
                     },
                     child: const Text('Create Group'),
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // Navigate to Join Group Page (to be implemented)
+                      context.go('/home/join-group');
                     },
                     child: const Text('Join Group'),
                   ),

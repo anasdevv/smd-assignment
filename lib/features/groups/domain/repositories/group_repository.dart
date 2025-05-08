@@ -20,4 +20,7 @@ abstract class GroupRepository {
   Future<void> addReminder(String groupId, String reminderId);
   Future<void> removeReminder(String groupId, String reminderId);
   Stream<List<GroupEntity>> getGroupsStream(String userId);
+  Stream<List<GroupEntity>> getAllGroupsStream();
+  Future<GroupEntity> getGroupById(String groupId);
+
 }

@@ -4,6 +4,11 @@ import 'package:smd_project/features/groups/domain/entities/group_entity.dart';
 import 'package:smd_project/features/groups/presentation/bloc/groups_bloc.dart';
 import 'package:smd_project/features/groups/presentation/bloc/groups_event.dart';
 import 'package:smd_project/features/groups/presentation/bloc/groups_state.dart';
+import 'package:smd_project/features/authentication/presentation/bloc/auth_bloc.dart';
+import 'package:smd_project/features/authentication/presentation/bloc/auth_event.dart';
+import 'package:smd_project/features/authentication/presentation/bloc/auth_state.dart';
+import 'package:go_router/go_router.dart';
+
 // import 'package:firebase_auth/firebase_auth.dart'; // Uncomment if using Firebase
 
 class CreateGroupPage extends StatefulWidget {
@@ -34,9 +39,18 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       final subject = _subjectController.text.trim();
       final description = _descriptionController.text.trim();
 
-      // Get current user ID (replace with actual logic)
-      // final userId = FirebaseAuth.instance.currentUser!.uid;
-      const userId = "user_id_here"; // Replace this in your integration
+      final authState = context.read<AuthBloc>().state;
+
+    if (authState is! Authenticated) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('User not authenticated')),
+      );
+      return;
+    }
+
+    final userId = authState.user.id;
+      
+        
 
       final group = GroupEntity(
         id: UniqueKey().toString(), // Or use UUID
@@ -52,6 +66,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       );
 
       context.read<GroupBloc>().add(CreateGroupEvent(group));
+
     }
   }
 
@@ -64,7 +79,10 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         child: BlocListener<GroupBloc, GroupState>(
           listener: (context, state) {
             if (state is GroupCreated) {
-              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Group created successfully')),
+              );
+              context.go('/home'); // Navigate to home or group list page
             } else if (state is GroupCreationError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Error: ${state.message}')),
