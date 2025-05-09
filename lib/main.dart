@@ -11,6 +11,8 @@ import 'package:smd_project/features/authentication/data/repositories/user_repos
 import 'package:smd_project/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:smd_project/features/groups/data/repositories/group_repository_impl.dart';
 import 'package:smd_project/features/groups/presentation/bloc/groups_bloc.dart';
+import 'package:smd_project/features/messages/data/repositories/message_repository_impl.dart';
+import 'package:smd_project/features/messages/presentation/bloc/messages_bloc.dart';
 import 'core/router/app_router.dart';
 import 'firebase_options.dart';
 import 'package:smd_project/features/groups/domain/usecases/join_group.dart';
@@ -35,8 +37,12 @@ void main() async {
     remoteDataSource: AuthRemoteDataSourceImpl(),
     userRepository: UserRepositoryImpl(),
   );
+
   final groupRepository =
       GroupRepositoryImpl(firestore: FirebaseFirestore.instance);
+
+  final messageRepository =
+      MessageRepositoryImpl(firestore: FirebaseFirestore.instance);
 
   final joinGroupUseCase = JoinGroup(groupRepository);
 
@@ -61,6 +67,11 @@ void main() async {
           create: (context) => GroupBloc(
             groupRepository: groupRepository,
             joinGroupUseCase: joinGroupUseCase,
+          ),
+        ),
+        BlocProvider<MessagesBloc>(
+          create: (context) => MessagesBloc(
+            messagesRepository: messageRepository,
           ),
         ),
       ],

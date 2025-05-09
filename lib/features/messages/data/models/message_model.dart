@@ -9,8 +9,6 @@ class MessageModel extends MessageEntity {
     required super.senderName,
     required super.timestamp,
     required super.readBy,
-    super.attachmentUrl,
-    super.attachmentType,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,8 +18,6 @@ class MessageModel extends MessageEntity {
       'senderName': senderName,
       'timestamp': Timestamp.fromDate(timestamp),
       'readBy': readBy,
-      'attachmentUrl': attachmentUrl,
-      'attachmentType': attachmentType,
     };
   }
 
@@ -33,8 +29,6 @@ class MessageModel extends MessageEntity {
       senderName: map['senderName'] as String,
       timestamp: (map['timestamp'] as Timestamp).toDate(),
       readBy: List<String>.from(map['readBy'] ?? []),
-      attachmentUrl: map['attachmentUrl'] as String?,
-      attachmentType: map['attachmentType'] as String?,
     );
   }
 
@@ -54,8 +48,6 @@ class MessageModel extends MessageEntity {
       senderName: senderName ?? this.senderName,
       timestamp: timestamp ?? this.timestamp,
       readBy: readBy ?? this.readBy,
-      attachmentUrl: attachmentUrl ?? this.attachmentUrl,
-      attachmentType: attachmentType ?? this.attachmentType,
     );
   }
 }

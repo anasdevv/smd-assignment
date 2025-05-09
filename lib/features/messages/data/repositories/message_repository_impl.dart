@@ -22,8 +22,6 @@ class MessageRepositoryImpl implements MessageRepository {
       senderName: message.senderName,
       timestamp: message.timestamp,
       readBy: message.readBy,
-      attachmentUrl: message.attachmentUrl,
-      attachmentType: message.attachmentType,
     );
 
     await _getMessagesCollection(groupId)
@@ -46,10 +44,8 @@ class MessageRepositoryImpl implements MessageRepository {
 
   @override
   Stream<List<MessageEntity>> getGroupMessages(String groupId) {
-    return _getMessagesCollection(groupId)
-        .orderBy('timestamp', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
+    return _getMessagesCollection(groupId).orderBy('timestamp').snapshots().map(
+        (snapshot) => snapshot.docs
             .map((doc) => MessageModel.fromMap(
                 doc.id, doc.data() as Map<String, dynamic>))
             .toList());

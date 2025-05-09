@@ -7,8 +7,6 @@ class MessageEntity extends Equatable {
   final String senderName;
   final DateTime timestamp;
   final List<String> readBy;
-  final String? attachmentUrl;
-  final String? attachmentType;
 
   const MessageEntity({
     required this.id,
@@ -17,8 +15,6 @@ class MessageEntity extends Equatable {
     required this.senderName,
     required this.timestamp,
     required this.readBy,
-    this.attachmentUrl,
-    this.attachmentType,
   });
 
   @override
@@ -29,7 +25,5 @@ class MessageEntity extends Equatable {
         senderName,
         timestamp,
         readBy,
-        attachmentUrl,
-        attachmentType,
       ];
 }
