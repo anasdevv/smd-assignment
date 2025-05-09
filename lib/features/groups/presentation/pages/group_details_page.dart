@@ -1,6 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:smd_project/core/services/storage_service.dart';
 import 'package:smd_project/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:smd_project/features/authentication/presentation/bloc/auth_state.dart';
@@ -9,6 +10,7 @@ import 'package:smd_project/features/groups/domain/entities/group_entity.dart';
 import 'package:smd_project/features/groups/presentation/bloc/groups_bloc.dart';
 import 'package:smd_project/features/groups/presentation/bloc/groups_event.dart';
 import 'package:smd_project/features/groups/presentation/bloc/groups_state.dart';
+import 'package:smd_project/features/messages/presentation/pages/chat_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -41,7 +43,7 @@ class _GroupDetailsPageState extends State<GroupDetailsPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _storageService = StorageService(
       supabase: Supabase.instance.client,
     );
@@ -68,48 +70,29 @@ class _GroupDetailsPageState extends State<GroupDetailsPage>
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(120),
         child: AppBar(
+          actions: [
+            IconButton(
+              onPressed: () {
+                context.go('/home');
+              },
+              icon: Icon(Icons.arrow_back),
+              style: ButtonStyle(),
+            )
+          ],
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 widget.group.name,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(
                 widget.group.subject,
                 style: TextStyle(
                   fontSize: 14,
                   color: Theme.of(context).colorScheme.secondary,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Container(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Row(
-                  children: [
-                    Text(
-                      'Group ID: ${widget.group.id}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.copy, size: 16),
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: widget.group.id));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Group ID copied to clipboard'),
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                      },
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                    ),
-                  ],
                 ),
               ),
             ],
@@ -128,6 +111,11 @@ class _GroupDetailsPageState extends State<GroupDetailsPage>
                 icon: Icon(Icons.folder),
                 text: 'Files',
               ),
+              Tab(
+                icon: Icon(Icons.chat),
+                text: 'Chats',
+              ),
+              Tab(icon: Icon(Icons.info), text: 'Group Info')
             ],
           ),
         ),
@@ -137,14 +125,20 @@ class _GroupDetailsPageState extends State<GroupDetailsPage>
         children: [
           _buildAnnouncementsTab(),
           _buildFilesTab(),
+          _buildChatTab(widget.group.id),
+          _buildGroupInfo(widget.group, context),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           if (_tabController.index == 0) {
             _showCreateAnnouncementDialog();
-          } else {
+          } else if (_tabController == 1) {
             _showUploadFileDialog();
+          } else if (_tabController == 2) {
+            _buildChatTab(widget.group.id);
+          } else {
+            _buildGroupInfo(widget.group, context);
           }
         },
         icon: Icon(
@@ -921,4 +915,50 @@ class _GroupDetailsPageState extends State<GroupDetailsPage>
       ),
     );
   }
+}
+
+Widget _buildChatTab(groupId) {
+  return ChatPage(
+    groupId: groupId,
+  );
+}
+
+Widget _buildGroupInfo(group, context) {
+  return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          group.name,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          group.subject,
+          style: TextStyle(
+            fontSize: 14,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+        ),
+        Text(
+          'Group ID: ${group.id}',
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey[600],
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.copy, size: 16),
+          onPressed: () {
+            Clipboard.setData(ClipboardData(text: group.id));
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Group ID copied to clipboard'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          },
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(),
+        ),
+      ]);
 }

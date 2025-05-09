@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
               icon: const Icon(Icons.settings, color: Colors.white),
               tooltip: 'Settings',
               onPressed: () {
-                context.go('/home/settings');
+                context.push('/home/settings');
               },
             ),
             IconButton(
@@ -95,14 +95,14 @@ class _HomePageState extends State<HomePage> {
                                 context,
                                 'Create Group',
                                 Icons.add_circle_outline,
-                                () => context.go('/home/create-group'),
+                                () => context.push('/home/create-group'),
                               ),
                               const SizedBox(width: 20),
                               _buildActionButton(
                                 context,
                                 'Join Group',
                                 Icons.group_add_outlined,
-                                () => context.go('/home/join-group'),
+                                () => context.push('/home/join-group'),
                               ),
                             ],
                           ),

@@ -22,7 +22,12 @@ class ViewGroupsPage extends StatelessWidget {
 
         if (state is Authenticated) {
           final userId = state.user.id;
-          context.read<GroupBloc>().add(GetUserGroups(userId));
+
+          // Only trigger fetch if groups haven't been loaded yet
+          final groupState = context.watch<GroupBloc>().state;
+          if (groupState is! GroupLoaded) {
+            context.read<GroupBloc>().add(GetUserGroups(userId));
+          }
 
           return BlocBuilder<GroupBloc, GroupState>(
             builder: (context, groupState) {
@@ -76,7 +81,7 @@ class ViewGroupsPage extends StatelessWidget {
                       child: _GroupCard(
                         group: group,
                         onTap: () {
-                          context.push('/home/group/${group.id}');
+                          context.go('/home/group/${group.id}');
                         },
                       ),
                     );
@@ -166,6 +171,7 @@ class _GroupCard extends StatelessWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .primary
+                          // ignore: deprecated_member_use
                           .withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
