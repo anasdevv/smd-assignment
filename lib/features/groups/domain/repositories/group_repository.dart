@@ -1,3 +1,4 @@
+import 'package:smd_project/features/groups/domain/entities/announcement_entity.dart';
 import 'package:smd_project/features/groups/domain/entities/group_entity.dart';
 
 abstract class GroupRepository {
@@ -23,4 +24,12 @@ abstract class GroupRepository {
   Stream<List<GroupEntity>> getAllGroupsStream();
   Future<GroupEntity> getGroupById(String groupId);
 
+  // Announcement methods
+  Future<void> createAnnouncement(AnnouncementEntity announcement);
+  Future<void> updateAnnouncement(AnnouncementEntity announcement);
+  Future<void> deleteAnnouncement(String announcementId);
+  Future<List<AnnouncementEntity>> getAnnouncementsByGroup(String groupId);
+  Stream<List<AnnouncementEntity>> getAnnouncementsStream(String groupId);
+  Future<void> addAttachment(String announcementId, String fileId);
+  Future<void> removeAttachment(String announcementId, String fileId);
 }

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:smd_project/features/groups/domain/entities/announcement_entity.dart';
 import 'package:smd_project/features/groups/domain/entities/group_entity.dart';
 
 abstract class GroupState extends Equatable {
@@ -30,9 +31,7 @@ class GroupError extends GroupState {
   List<Object> get props => [message];
 }
 
-
 class GroupCreating extends GroupState {}
-
 
 class GroupCreated extends GroupState {}
 
@@ -44,7 +43,6 @@ class GroupCreationError extends GroupState {
   @override
   List<Object> get props => [message];
 }
-
 
 class GroupJoining extends GroupState {}
 
@@ -71,3 +69,30 @@ class GroupLoadedSingle extends GroupState {
 class GroupUpdated extends GroupState {}
 
 class GroupDeleted extends GroupState {}
+
+// Announcement states
+class AnnouncementsLoading extends GroupState {}
+
+class AnnouncementsLoaded extends GroupState {
+  final List<AnnouncementEntity> announcements;
+
+  const AnnouncementsLoaded(this.announcements);
+
+  @override
+  List<Object> get props => [announcements];
+}
+
+class AnnouncementsError extends GroupState {
+  final String message;
+
+  const AnnouncementsError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+class AnnouncementCreated extends GroupState {}
+
+class AnnouncementUpdated extends GroupState {}
+
+class AnnouncementDeleted extends GroupState {}

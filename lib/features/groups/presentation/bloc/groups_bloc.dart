@@ -18,6 +18,12 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     on<GetAllGroupsEvent>(_onGetAllGroups);
     on<GetGroupByIdEvent>(_onGetGroupById);
 
+    on<GetGroupAnnouncements>(_onGetGroupAnnouncements);
+    on<CreateAnnouncement>(_onCreateAnnouncement);
+    on<UpdateAnnouncement>(_onUpdateAnnouncement);
+    on<DeleteAnnouncement>(_onDeleteAnnouncement);
+    on<AddAnnouncementAttachment>(_onAddAnnouncementAttachment);
+    on<RemoveAnnouncementAttachment>(_onRemoveAnnouncementAttachment);
   }
 
   Future<void> _onGetUserGroups(
@@ -50,32 +56,31 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
   }
 
   Future<void> _onJoinGroup(
-  JoinGroupEvent event,
-  Emitter<GroupState> emit,
-) async {
-  emit(GroupJoining());
-  try {
-    await groupRepository.addMember(event.groupId, event.userId);
+    JoinGroupEvent event,
+    Emitter<GroupState> emit,
+  ) async {
+    emit(GroupJoining());
+    try {
+      await groupRepository.addMember(event.groupId, event.userId);
 
-    if (state is GroupLoaded) {
-      final currentGroups = (state as GroupLoaded).groups;
+      if (state is GroupLoaded) {
+        final currentGroups = (state as GroupLoaded).groups;
 
-      final updatedGroups = currentGroups.map((group) {
-        if (group.id == event.groupId && group is GroupModel) {
-          return group.copyWith(isJoined: true); // ✅ Use copyWith
-        }
-        return group;
-      }).toList();
+        final updatedGroups = currentGroups.map((group) {
+          if (group.id == event.groupId && group is GroupModel) {
+            return group.copyWith(isJoined: true); // ✅ Use copyWith
+          }
+          return group;
+        }).toList();
 
-      emit(GroupLoaded(updatedGroups));
-    } else {
-      emit(const GroupError("Unable to join group. Group list not loaded."));
+        emit(GroupLoaded(updatedGroups));
+      } else {
+        emit(const GroupError("Unable to join group. Group list not loaded."));
+      }
+    } catch (e) {
+      emit(GroupJoinError(e.toString()));
     }
-  } catch (e) {
-    emit(GroupJoinError(e.toString()));
   }
-}
-
 
   Future<void> _onGetAllGroups(
     GetAllGroupsEvent event,
@@ -85,7 +90,6 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     try {
       final groups = await groupRepository.getAllGroupsStream().first;
 
-      
       final userGroups = await groupRepository.getGroupsByUser(event.userId);
 
       final joinedGroupIds = userGroups.map((g) => g.id).toSet();
@@ -109,15 +113,97 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
   }
 
   Future<void> _onGetGroupById(
-  GetGroupByIdEvent event,
-  Emitter<GroupState> emit,
-) async {
-  emit(GroupLoading());
-  try {
-    final group = await groupRepository.getGroupById(event.groupId);
-    emit(GroupLoadedSingle(group));
-  } catch (e) {
-    emit(GroupError("Failed to load group: $e"));
+    GetGroupByIdEvent event,
+    Emitter<GroupState> emit,
+  ) async {
+    emit(GroupLoading());
+    try {
+      final group = await groupRepository.getGroupById(event.groupId);
+      emit(GroupLoadedSingle(group));
+    } catch (e) {
+      emit(GroupError("Failed to load group: $e"));
+    }
   }
-}
+
+  Future<void> _onGetGroupAnnouncements(
+    GetGroupAnnouncements event,
+    Emitter<GroupState> emit,
+  ) async {
+    emit(AnnouncementsLoading());
+    try {
+      final announcements = await groupRepository.getAnnouncementsByGroup(
+        event.groupId,
+      );
+      emit(AnnouncementsLoaded(announcements));
+    } catch (e) {
+      print('e ${e}');
+      emit(AnnouncementsError(e.toString()));
+    }
+  }
+
+  Future<void> _onCreateAnnouncement(
+    CreateAnnouncement event,
+    Emitter<GroupState> emit,
+  ) async {
+    try {
+      await groupRepository.createAnnouncement(event.announcement);
+      emit(AnnouncementCreated());
+      add(GetGroupAnnouncements(event.announcement.groupId));
+    } catch (e) {
+      emit(AnnouncementsError(e.toString()));
+    }
+  }
+
+  Future<void> _onUpdateAnnouncement(
+    UpdateAnnouncement event,
+    Emitter<GroupState> emit,
+  ) async {
+    try {
+      await groupRepository.updateAnnouncement(event.announcement);
+      emit(AnnouncementUpdated());
+      add(GetGroupAnnouncements(event.announcement.groupId));
+    } catch (e) {
+      emit(AnnouncementsError(e.toString()));
+    }
+  }
+
+  Future<void> _onDeleteAnnouncement(
+    DeleteAnnouncement event,
+    Emitter<GroupState> emit,
+  ) async {
+    try {
+      await groupRepository.deleteAnnouncement(event.announcementId);
+      emit(AnnouncementDeleted());
+    } catch (e) {
+      emit(AnnouncementsError(e.toString()));
+    }
+  }
+
+  Future<void> _onAddAnnouncementAttachment(
+    AddAnnouncementAttachment event,
+    Emitter<GroupState> emit,
+  ) async {
+    try {
+      await groupRepository.addAttachment(
+        event.announcementId,
+        event.fileId,
+      );
+    } catch (e) {
+      emit(AnnouncementsError(e.toString()));
+    }
+  }
+
+  Future<void> _onRemoveAnnouncementAttachment(
+    RemoveAnnouncementAttachment event,
+    Emitter<GroupState> emit,
+  ) async {
+    try {
+      await groupRepository.removeAttachment(
+        event.announcementId,
+        event.fileId,
+      );
+    } catch (e) {
+      emit(AnnouncementsError(e.toString()));
+    }
+  }
 }
