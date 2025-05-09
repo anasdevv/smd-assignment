@@ -280,4 +280,25 @@ class GroupRepositoryImpl implements GroupRepository {
       'attachments': FieldValue.arrayRemove([fileId])
     });
   }
+
+  @override
+  Future<GroupEntity> getGroupByCode(String code) async {
+    final snapshot = await _groupsCollection
+        .where('code', isEqualTo: code)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isEmpty) {
+      throw Exception('Group not found with code: $code');
+    }
+
+    final doc = snapshot.docs.first;
+    return GroupModel.fromMap(doc.id, doc.data() as Map<String, dynamic>);
+  }
+
+  @override
+  Future<void> joinGroupByCode(String code, String userId) async {
+    final group = await getGroupByCode(code);
+    await addMember(group.id, userId);
+  }
 }

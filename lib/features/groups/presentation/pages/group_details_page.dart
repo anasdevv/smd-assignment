@@ -13,6 +13,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 class GroupDetailsPage extends StatefulWidget {
   final GroupEntity group;
@@ -63,38 +65,71 @@ class _GroupDetailsPageState extends State<GroupDetailsPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.group.name,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              widget.group.subject,
-              style: TextStyle(
-                fontSize: 14,
-                color: Theme.of(context).colorScheme.secondary,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(120),
+        child: AppBar(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                widget.group.name,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-            ),
-          ],
-        ),
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Theme.of(context).colorScheme.primary,
-          labelColor: Theme.of(context).colorScheme.primary,
-          unselectedLabelColor: Colors.grey,
-          tabs: const [
-            Tab(
-              icon: Icon(Icons.announcement),
-              text: 'Announcements',
-            ),
-            Tab(
-              icon: Icon(Icons.folder),
-              text: 'Files',
-            ),
-          ],
+              Text(
+                widget.group.subject,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Container(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  children: [
+                    Text(
+                      'Group ID: ${widget.group.id}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.copy, size: 16),
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: widget.group.id));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Group ID copied to clipboard'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      },
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          bottom: TabBar(
+            controller: _tabController,
+            indicatorColor: Theme.of(context).colorScheme.primary,
+            labelColor: Theme.of(context).colorScheme.primary,
+            unselectedLabelColor: Colors.grey,
+            tabs: const [
+              Tab(
+                icon: Icon(Icons.announcement),
+                text: 'Announcements',
+              ),
+              Tab(
+                icon: Icon(Icons.folder),
+                text: 'Files',
+              ),
+            ],
+          ),
         ),
       ),
       body: TabBarView(

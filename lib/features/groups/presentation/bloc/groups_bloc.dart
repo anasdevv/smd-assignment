@@ -24,6 +24,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     on<DeleteAnnouncement>(_onDeleteAnnouncement);
     on<AddAnnouncementAttachment>(_onAddAnnouncementAttachment);
     on<RemoveAnnouncementAttachment>(_onRemoveAnnouncementAttachment);
+    on<JoinGroupByCodeEvent>(_onJoinGroupByCode);
   }
 
   Future<void> _onGetUserGroups(
@@ -62,21 +63,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     emit(GroupJoining());
     try {
       await groupRepository.addMember(event.groupId, event.userId);
-
-      if (state is GroupLoaded) {
-        final currentGroups = (state as GroupLoaded).groups;
-
-        final updatedGroups = currentGroups.map((group) {
-          if (group.id == event.groupId && group is GroupModel) {
-            return group.copyWith(isJoined: true); // ✅ Use copyWith
-          }
-          return group;
-        }).toList();
-
-        emit(GroupLoaded(updatedGroups));
-      } else {
-        emit(const GroupError("Unable to join group. Group list not loaded."));
-      }
+      emit(GroupJoined());
     } catch (e) {
       emit(GroupJoinError(e.toString()));
     }
@@ -204,6 +191,19 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
       );
     } catch (e) {
       emit(AnnouncementsError(e.toString()));
+    }
+  }
+
+  Future<void> _onJoinGroupByCode(
+    JoinGroupByCodeEvent event,
+    Emitter<GroupState> emit,
+  ) async {
+    emit(GroupJoining());
+    try {
+      await groupRepository.joinGroupByCode(event.code, event.userId);
+      emit(GroupJoined());
+    } catch (e) {
+      emit(GroupJoinError(e.toString()));
     }
   }
 }

@@ -119,3 +119,16 @@ class RemoveAnnouncementAttachment extends GroupEvent {
   @override
   List<Object> get props => [announcementId, fileId];
 }
+
+class JoinGroupByCodeEvent extends GroupEvent {
+  final String code;
+  final String userId;
+
+  const JoinGroupByCodeEvent({
+    required this.code,
+    required this.userId,
+  });
+
+  @override
+  List<Object> get props => [code, userId];
+}

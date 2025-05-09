@@ -6,7 +6,7 @@ import 'package:smd_project/features/authentication/presentation/pages/login_pag
 import 'package:smd_project/features/authentication/presentation/pages/signup_page.dart';
 import 'package:smd_project/features/authentication/presentation/pages/forgot_password_page.dart';
 import 'package:smd_project/features/authentication/presentation/pages/user_settings_page.dart';
-import 'package:smd_project/features/groups/presentation/pages/join_group_page.dart';
+import 'package:smd_project/features/groups/presentation/pages/join_group_by_code_page.dart';
 import 'package:smd_project/features/home/presentation/pages/home_page.dart';
 import 'package:smd_project/features/groups/presentation/pages/create_groups_page.dart';
 import 'package:smd_project/features/groups/presentation/pages/group_info_page.dart';
@@ -65,7 +65,7 @@ final router = GoRouter(
           // fallback if user is not logged in
           return const LoginPage();
         }
-        return JoinGroupScreen(userId: user.uid);
+        return JoinGroupByIdPage(userId: user.uid);
       },
     ),
     GoRoute(

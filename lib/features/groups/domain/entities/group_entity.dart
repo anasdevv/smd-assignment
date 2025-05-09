@@ -13,7 +13,6 @@ class GroupEntity extends Equatable {
   final List<String> tags;
   final bool isJoined;
 
-
   const GroupEntity({
     required this.id,
     required this.name,

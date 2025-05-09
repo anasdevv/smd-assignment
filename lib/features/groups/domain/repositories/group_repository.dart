@@ -32,4 +32,8 @@ abstract class GroupRepository {
   Stream<List<AnnouncementEntity>> getAnnouncementsStream(String groupId);
   Future<void> addAttachment(String announcementId, String fileId);
   Future<void> removeAttachment(String announcementId, String fileId);
+
+  // Join by code methods
+  Future<GroupEntity> getGroupByCode(String code);
+  Future<void> joinGroupByCode(String code, String userId);
 }

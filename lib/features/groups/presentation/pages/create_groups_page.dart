@@ -9,6 +9,7 @@ import 'package:smd_project/features/authentication/presentation/bloc/auth_event
 import 'package:smd_project/features/authentication/presentation/bloc/auth_state.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:math';
 
 // import 'package:firebase_auth/firebase_auth.dart'; // Uncomment if using Firebase
 
