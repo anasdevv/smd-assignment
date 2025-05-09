@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:smd_project/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:smd_project/features/authentication/presentation/bloc/auth_state.dart';
 import 'package:smd_project/features/groups/presentation/bloc/groups_bloc.dart';
@@ -42,6 +43,11 @@ class ViewGroupsPage extends StatelessWidget {
                         title: Text(group.name),
                         subtitle: Text(group.subject),
                         trailing: const Icon(Icons.group),
+                        onTap: () {
+                          print('group ${group}');
+                          print("group id ${group.id}");
+                          context.push('/home/group/${group.id}');
+                        },
                       ),
                     );
                   },

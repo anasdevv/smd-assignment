@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:smd_project/features/groups/domain/entities/group_entity.dart';
+import 'package:smd_project/features/groups/domain/entities/announcement_entity.dart';
 
 abstract class GroupEvent extends Equatable {
   const GroupEvent();
@@ -55,3 +56,66 @@ class GetGroupByIdEvent extends GroupEvent {
 }
 
 class CheckAuthStatus extends GroupEvent {}
+
+// Announcement events
+class GetGroupAnnouncements extends GroupEvent {
+  final String groupId;
+
+  const GetGroupAnnouncements(this.groupId);
+
+  @override
+  List<Object> get props => [groupId];
+}
+
+class CreateAnnouncement extends GroupEvent {
+  final AnnouncementEntity announcement;
+
+  const CreateAnnouncement(this.announcement);
+
+  @override
+  List<Object> get props => [announcement];
+}
+
+class UpdateAnnouncement extends GroupEvent {
+  final AnnouncementEntity announcement;
+
+  const UpdateAnnouncement(this.announcement);
+
+  @override
+  List<Object> get props => [announcement];
+}
+
+class DeleteAnnouncement extends GroupEvent {
+  final String announcementId;
+
+  const DeleteAnnouncement(this.announcementId);
+
+  @override
+  List<Object> get props => [announcementId];
+}
+
+class AddAnnouncementAttachment extends GroupEvent {
+  final String announcementId;
+  final String fileId;
+
+  const AddAnnouncementAttachment({
+    required this.announcementId,
+    required this.fileId,
+  });
+
+  @override
+  List<Object> get props => [announcementId, fileId];
+}
+
+class RemoveAnnouncementAttachment extends GroupEvent {
+  final String announcementId;
+  final String fileId;
+
+  const RemoveAnnouncementAttachment({
+    required this.announcementId,
+    required this.fileId,
+  });
+
+  @override
+  List<Object> get props => [announcementId, fileId];
+}

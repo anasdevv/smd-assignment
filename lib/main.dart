@@ -14,14 +14,23 @@ import 'package:smd_project/features/groups/presentation/bloc/groups_bloc.dart';
 import 'core/router/app_router.dart';
 import 'firebase_options.dart';
 import 'package:smd_project/features/groups/domain/usecases/join_group.dart';
-
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Initialize Supabase
+  await Supabase.initialize(
+    url: 'https://rhfmwyxhbiheouvoggsk.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJoZm13eXhoYmloZW91dm9nZ3NrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY3NDkzNDYsImV4cCI6MjA2MjMyNTM0Nn0.7_6dYBJJh38dVcyjfLU4CmLY_fPnCT_2iBPlKSUegfM', // Replace with your Supabase anon key
+  );
+
   final authRepository = AuthRepositoryImpl(
     remoteDataSource: AuthRemoteDataSourceImpl(),
     userRepository: UserRepositoryImpl(),

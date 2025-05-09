@@ -8,6 +8,7 @@ import 'package:smd_project/features/authentication/presentation/bloc/auth_bloc.
 import 'package:smd_project/features/authentication/presentation/bloc/auth_event.dart';
 import 'package:smd_project/features/authentication/presentation/bloc/auth_state.dart';
 import 'package:go_router/go_router.dart';
+import 'package:uuid/uuid.dart';
 
 // import 'package:firebase_auth/firebase_auth.dart'; // Uncomment if using Firebase
 
@@ -38,22 +39,21 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       final name = _nameController.text.trim();
       final subject = _subjectController.text.trim();
       final description = _descriptionController.text.trim();
+      final _uuid = const Uuid();
 
       final authState = context.read<AuthBloc>().state;
 
-    if (authState is! Authenticated) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('User not authenticated')),
-      );
-      return;
-    }
+      if (authState is! Authenticated) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('User not authenticated')),
+        );
+        return;
+      }
 
-    final userId = authState.user.id;
-      
-        
+      final userId = authState.user.id;
 
       final group = GroupEntity(
-        id: UniqueKey().toString(), // Or use UUID
+        id: _uuid.v4(), // Or use UUID
         name: name,
         subject: subject,
         description: description,
@@ -66,7 +66,6 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       );
 
       context.read<GroupBloc>().add(CreateGroupEvent(group));
-
     }
   }
 

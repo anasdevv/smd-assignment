@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:smd_project/features/groups/data/models/announcement_model.dart';
 import 'package:smd_project/features/groups/data/models/group_model.dart';
+import 'package:smd_project/features/groups/domain/entities/announcement_entity.dart';
 import 'package:smd_project/features/groups/domain/entities/group_entity.dart';
 import 'package:smd_project/features/groups/domain/repositories/group_repository.dart';
 
@@ -10,6 +12,8 @@ class GroupRepositoryImpl implements GroupRepository {
       : _firestore = firestore ?? FirebaseFirestore.instance;
 
   CollectionReference get _groupsCollection => _firestore.collection('groups');
+  CollectionReference get _announcementsCollection =>
+      _firestore.collection('announcements');
 
   @override
   Future<void> createGroup(GroupEntity group) async {
@@ -180,21 +184,100 @@ class GroupRepositoryImpl implements GroupRepository {
   }
 
   @override
-Stream<List<GroupEntity>> getAllGroupsStream() {
-  return _groupsCollection.snapshots().map(
-    (snapshot) => snapshot.docs
-        .map((doc) =>
-            GroupModel.fromMap(doc.id, doc.data() as Map<String, dynamic>))
-        .toList(),
-  );
-}
+  Stream<List<GroupEntity>> getAllGroupsStream() {
+    return _groupsCollection.snapshots().map(
+          (snapshot) => snapshot.docs
+              .map((doc) => GroupModel.fromMap(
+                  doc.id, doc.data() as Map<String, dynamic>))
+              .toList(),
+        );
+  }
 
-@override
-Future<GroupEntity> getGroupById(String groupId) async {
-  final doc = await _groupsCollection.doc(groupId).get();
-  if (!doc.exists) throw Exception("Group not found");
-  return GroupModel.fromMap(doc.id, doc.data() as Map<String, dynamic>);
-}
+  @override
+  Future<GroupEntity> getGroupById(String groupId) async {
+    final doc = await _groupsCollection.doc(groupId).get();
+    if (!doc.exists) throw Exception("Group not found");
+    return GroupModel.fromMap(doc.id, doc.data() as Map<String, dynamic>);
+  }
 
-  
+  Future<void> createAnnouncement(AnnouncementEntity announcement) async {
+    final announcementModel = AnnouncementModel(
+      id: announcement.id,
+      groupId: announcement.groupId,
+      title: announcement.title,
+      content: announcement.content,
+      createdBy: announcement.createdBy,
+      createdAt: announcement.createdAt,
+      attachments: announcement.attachments,
+      createdById: announcement.createdById,
+      creatorPhotoURL: announcement.creatorPhotoURL,
+    );
+
+    await _announcementsCollection
+        .doc(announcement.id)
+        .set(announcementModel.toMap());
+  }
+
+  @override
+  Future<void> updateAnnouncement(AnnouncementEntity announcement) async {
+    final announcementModel = AnnouncementModel(
+      id: announcement.id,
+      groupId: announcement.groupId,
+      title: announcement.title,
+      content: announcement.content,
+      createdBy: announcement.createdBy,
+      createdAt: announcement.createdAt,
+      attachments: announcement.attachments,
+      createdById: announcement.createdById,
+    );
+
+    await _announcementsCollection
+        .doc(announcement.id)
+        .update(announcementModel.toMap());
+  }
+
+  @override
+  Future<void> deleteAnnouncement(String announcementId) async {
+    await _announcementsCollection.doc(announcementId).delete();
+  }
+
+  @override
+  Future<List<AnnouncementEntity>> getAnnouncementsByGroup(
+      String groupId) async {
+    final snapshot = await _announcementsCollection
+        .where('groupId', isEqualTo: groupId)
+        .orderBy('createdAt', descending: true)
+        .get();
+
+    return snapshot.docs
+        .map((doc) => AnnouncementModel.fromMap(
+            doc.id, doc.data() as Map<String, dynamic>))
+        .toList();
+  }
+
+  @override
+  Stream<List<AnnouncementEntity>> getAnnouncementsStream(String groupId) {
+    return _announcementsCollection
+        .where('groupId', isEqualTo: groupId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => AnnouncementModel.fromMap(
+                doc.id, doc.data() as Map<String, dynamic>))
+            .toList());
+  }
+
+  @override
+  Future<void> addAttachment(String announcementId, String fileId) async {
+    await _announcementsCollection.doc(announcementId).update({
+      'attachments': FieldValue.arrayUnion([fileId])
+    });
+  }
+
+  @override
+  Future<void> removeAttachment(String announcementId, String fileId) async {
+    await _announcementsCollection.doc(announcementId).update({
+      'attachments': FieldValue.arrayRemove([fileId])
+    });
+  }
 }

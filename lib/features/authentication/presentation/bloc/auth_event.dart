@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:equatable/equatable.dart';
+import 'package:file_picker/file_picker.dart';
 
 abstract class AuthEvent extends Equatable {
   const AuthEvent();
@@ -42,3 +44,16 @@ class ResetPasswordRequested extends AuthEvent {
 class CheckAuthStatus extends AuthEvent {}
 
 class FetchUser extends AuthEvent {}
+
+class UpdateProfile extends AuthEvent {
+  final String displayName;
+  final PlatformFile? photoFile;
+
+  const UpdateProfile({
+    required this.displayName,
+    this.photoFile,
+  });
+
+  @override
+  List<Object?> get props => [displayName, photoFile];
+}

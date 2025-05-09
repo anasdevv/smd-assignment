@@ -73,9 +73,6 @@
 //   }
 // }
 
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smd_project/features/authentication/presentation/bloc/auth_event.dart';
@@ -110,6 +107,13 @@ class HomePage extends StatelessWidget {
             },
           ),
           actions: [
+            IconButton(
+              icon: const Icon(Icons.settings),
+              tooltip: 'Settings',
+              onPressed: () {
+                context.go('/home/settings');
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.logout),
               tooltip: 'Logout',
