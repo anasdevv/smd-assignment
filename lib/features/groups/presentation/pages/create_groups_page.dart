@@ -5,9 +5,12 @@ import 'package:smd_project/features/groups/presentation/bloc/groups_bloc.dart';
 import 'package:smd_project/features/groups/presentation/bloc/groups_event.dart';
 import 'package:smd_project/features/groups/presentation/bloc/groups_state.dart';
 import 'package:smd_project/features/authentication/presentation/bloc/auth_bloc.dart';
-import 'package:smd_project/features/authentication/presentation/bloc/auth_event.dart';
 import 'package:smd_project/features/authentication/presentation/bloc/auth_state.dart';
 import 'package:go_router/go_router.dart';
+<<<<<<< Updated upstream
+=======
+import 'package:uuid/uuid.dart';
+>>>>>>> Stashed changes
 
 // import 'package:firebase_auth/firebase_auth.dart'; // Uncomment if using Firebase
 

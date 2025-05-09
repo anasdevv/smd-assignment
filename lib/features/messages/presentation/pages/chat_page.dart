@@ -12,7 +12,8 @@ import 'package:smd_project/features/messages/presentation/bloc/messages_event.d
 import 'package:smd_project/features/messages/presentation/bloc/messages_state.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+  final String groupId; // replace with dynamic group ID if needed
+  const ChatPage({super.key, required this.groupId});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -22,7 +23,6 @@ class _ChatPageState extends State<ChatPage> {
   late String userId;
   late String userName;
   final TextEditingController _messageTextController = TextEditingController();
-  final String groupId = "test"; // replace with dynamic group ID if needed
 
   @override
   void initState() {
@@ -32,7 +32,7 @@ class _ChatPageState extends State<ChatPage> {
     if (authState is Authenticated) {
       userId = authState.user.id;
       userName = authState.user.displayName;
-      context.read<MessagesBloc>().add(GetGroupMessages(groupId));
+      context.read<MessagesBloc>().add(GetGroupMessages(widget.groupId));
     } else {
       context.read<AuthBloc>().add(FetchUser());
     }
@@ -48,7 +48,7 @@ class _ChatPageState extends State<ChatPage> {
       timestamp: DateTime.now(),
       readBy: [],
     );
-    context.read<MessagesBloc>().add(SendMessage(groupId, message));
+    context.read<MessagesBloc>().add(SendMessage(widget.groupId, message));
   }
 
   @override
@@ -60,9 +60,10 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(title: const Text("Chat")),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 16, 16, 96),
         child: Column(
           children: [
             Expanded(
@@ -71,7 +72,9 @@ class _ChatPageState extends State<ChatPage> {
                   if (state is Authenticated) {
                     userId = state.user.id;
                     userName = state.user.displayName;
-                    context.read<MessagesBloc>().add(GetGroupMessages(groupId));
+                    context
+                        .read<MessagesBloc>()
+                        .add(GetGroupMessages(widget.groupId));
                   }
                 },
                 child: BlocConsumer<MessagesBloc, MessagesState>(
@@ -112,7 +115,19 @@ class _ChatPageState extends State<ChatPage> {
                                     ? CrossAxisAlignment.end
                                     : CrossAxisAlignment.start,
                                 children: [
-                                  Text(message.text),
+                                  Text(
+                                    message.senderName,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    message.text,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
                                   const SizedBox(height: 4),
                                   Text(
                                     DateFormat('MMM d, h:mm a')

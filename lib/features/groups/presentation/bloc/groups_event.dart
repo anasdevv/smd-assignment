@@ -48,6 +48,15 @@ class GetAllGroupsEvent extends GroupEvent {
   List<Object?> get props => [userId];
 }
 
+class GetGroupsUserIsNotInEvent extends GroupEvent {
+  final String userId;
+
+  const GetGroupsUserIsNotInEvent(this.userId);
+
+  @override
+  List<Object?> get props => [userId];
+}
+
 class GetGroupByIdEvent extends GroupEvent {
   final String groupId;
 

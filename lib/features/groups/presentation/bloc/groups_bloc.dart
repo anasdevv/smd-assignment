@@ -4,7 +4,6 @@ import 'package:smd_project/features/groups/domain/usecases/join_group.dart';
 import 'package:smd_project/features/groups/presentation/bloc/groups_event.dart';
 import 'package:smd_project/features/groups/presentation/bloc/groups_state.dart';
 import 'package:smd_project/features/groups/data/models/group_model.dart';
-import 'package:smd_project/features/groups/domain/entities/group_entity.dart';
 
 class GroupBloc extends Bloc<GroupEvent, GroupState> {
   final GroupRepository groupRepository;

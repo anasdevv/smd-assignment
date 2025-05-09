@@ -3,10 +3,19 @@ import 'package:go_router/go_router.dart';
 import 'package:smd_project/features/authentication/presentation/pages/login_page.dart';
 import 'package:smd_project/features/authentication/presentation/pages/signup_page.dart';
 import 'package:smd_project/features/authentication/presentation/pages/forgot_password_page.dart';
+<<<<<<< Updated upstream
 import 'package:smd_project/features/groups/presentation/pages/join_group_page.dart';
 import 'package:smd_project/features/home/presentation/pages/home_page.dart';
 import 'package:smd_project/features/groups/presentation/pages/create_groups_page.dart';
 import 'package:smd_project/features/groups/presentation/pages/group_info_page.dart';
+=======
+import 'package:smd_project/features/authentication/presentation/pages/user_settings_page.dart';
+import 'package:smd_project/features/groups/presentation/pages/group_page.dart';
+import 'package:smd_project/features/groups/presentation/pages/join_group_by_code_page.dart';
+import 'package:smd_project/features/groups/presentation/pages/view_groups_page.dart';
+import 'package:smd_project/features/home/presentation/pages/home_page.dart';
+import 'package:smd_project/features/groups/presentation/pages/create_groups_page.dart';
+>>>>>>> Stashed changes
 
 final router = GoRouter(
   initialLocation: '/login',
@@ -62,6 +71,7 @@ final router = GoRouter(
         return JoinGroupScreen(userId: user.uid);
       },
     ),
+<<<<<<< Updated upstream
     // GoRoute(
     //   path: '/home/group/:groupId',
     //   builder: (context, state) {
@@ -69,5 +79,21 @@ final router = GoRouter(
     //     return GroupDetailPage(groupId: groupId);
     //   },
     // ),
+=======
+    GoRoute(
+      path: '/home/group/:groupId',
+      builder: (context, state) {
+        return GroupLoader(rawGroupId: state.pathParameters['groupId']!);
+      },
+    ),
+    GoRoute(
+      path: '/home/settings',
+      builder: (context, state) => const UserSettingsPage(),
+    ),
+    GoRoute(
+      path: '/home/view-groups',
+      builder: (context, state) => const ViewGroupsPage(),
+    ),
+>>>>>>> Stashed changes
   ],
 );

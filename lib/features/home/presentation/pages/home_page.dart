@@ -88,6 +88,14 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
+<<<<<<< Updated upstream
+=======
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+>>>>>>> Stashed changes
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
@@ -97,6 +105,7 @@ class HomePage extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
+<<<<<<< Updated upstream
           title: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
               if (state is AuthLoading) {
@@ -112,6 +121,21 @@ class HomePage extends StatelessWidget {
           actions: [
             IconButton(
               icon: const Icon(Icons.logout),
+=======
+          elevation: 0,
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          title: _buildBloc(),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.settings, color: Colors.white),
+              tooltip: 'Settings',
+              onPressed: () {
+                context.push('/home/settings');
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.logout, color: Colors.white),
+>>>>>>> Stashed changes
               tooltip: 'Logout',
               onPressed: () {
                 context.read<AuthBloc>().add(SignOutRequested());
@@ -119,6 +143,7 @@ class HomePage extends StatelessWidget {
             ),
           ],
         ),
+<<<<<<< Updated upstream
         body: Column(
           children: [
             const Expanded(
@@ -147,6 +172,63 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
+=======
+        body: ViewGroupsPage(),
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: (value) => {
+            if (value == 0)
+              {
+                context.push('/home'),
+              }
+            else if (value == 1)
+              {
+                context.push('/home/create-group'),
+              }
+            else
+              {
+                context.push('/home/join-group'),
+              }
+          },
+          items: const [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.group), label: 'My Groups'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.add_circle_outline), label: 'Create'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.add_circle_outline), label: 'Join'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  BlocBuilder<AuthBloc, AuthState> _buildBloc() {
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        if (state is AuthLoading) {
+          return const CircularProgressIndicator(
+            color: Colors.white,
+          );
+        } else if (state is Authenticated) {
+          return Text(
+            "Welcome ${state.user.displayName}",
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          );
+        } else if (state is AuthError) {
+          return const Text(
+            "Error",
+            style: TextStyle(color: Colors.white),
+          );
+        }
+        return const Text(
+          "Welcome User",
+          style: TextStyle(color: Colors.white),
+        );
+      },
+>>>>>>> Stashed changes
     );
   }
 }
