@@ -12,7 +12,7 @@ abstract class TaskRepository {
   Future<void> assignTask(String groupId, String taskId, String userId);
   Future<void> unassignTask(String groupId, String taskId, String userId);
   Future<void> addTaskAttachment(
-      String groupId, String taskId, String attachmentUrl);
+  String groupId, String taskId, String attachmentUrl);
   Future<void> removeTaskAttachment(
-      String groupId, String taskId, String attachmentUrl);
+  String groupId, String taskId, String attachmentUrl);
 }

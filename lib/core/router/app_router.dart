@@ -62,12 +62,12 @@ final router = GoRouter(
         return JoinGroupScreen(userId: user.uid);
       },
     ),
-    GoRoute(
-      path: '/home/group/:groupId',
-      builder: (context, state) {
-        final groupId = state.pathParameters['groupId']!;
-        return GroupDetailPage(groupId: groupId);
-      },
-    ),
+    // GoRoute(
+    //   path: '/home/group/:groupId',
+    //   builder: (context, state) {
+    //     final groupId = state.pathParameters['groupId']!;
+    //     return GroupDetailPage(groupId: groupId);
+    //   },
+    // ),
   ],
 );
