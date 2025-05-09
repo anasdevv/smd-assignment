@@ -9,6 +9,7 @@ class MessagesBloc extends Bloc<MessagesEvent, MessagesState> {
 
   MessagesBloc({required this.messagesRepository}) : super(MessagesInitial()) {
     on<GetGroupMessages>(_onGetGroupMessages);
+    on<SendMessage>(_onSendMessage);
   }
 
   Future<void> _onGetGroupMessages(
@@ -21,7 +22,18 @@ class MessagesBloc extends Bloc<MessagesEvent, MessagesState> {
       messagesRepository
           .getGroupMessages(event.groupId), // Stream<List<MessageEntity>>
       onData: (messages) => MessagesLoaded(messages),
-      onError: (error, _) => MessageError(error.toString()),
+      onError: (error, _) => MessagesError(error.toString()),
     );
+  }
+
+  Future<void> _onSendMessage(
+    SendMessage event,
+    Emitter<MessagesState> emit,
+  ) async {
+    try {
+      await messagesRepository.sendMessage(event.groupId, event.message);
+    } catch (e) {
+      emit(MessagesError(e.toString()));
+    }
   }
 }

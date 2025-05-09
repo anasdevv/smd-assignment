@@ -21,10 +21,10 @@ class MessagesLoaded extends MessagesState {
   List<Object> get props => [messages];
 }
 
-class MessageError extends MessagesState {
+class MessagesError extends MessagesState {
   final String message;
 
-  const MessageError(this.message);
+  const MessagesError(this.message);
 
   @override
   List<Object> get props => [message];

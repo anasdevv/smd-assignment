@@ -45,6 +45,7 @@ dependencies:
   firebase_storage: ^12.4.5
   js: ^0.7.1
   intl: ^0.18.1
+  uuid: ^4.3.3
   # firebase: ^9.0.3
 
 dev_dependencies:
