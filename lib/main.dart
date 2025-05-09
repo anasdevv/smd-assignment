@@ -15,6 +15,7 @@ import 'package:smd_project/features/messages/data/repositories/message_reposito
 import 'package:smd_project/features/messages/presentation/bloc/messages_bloc.dart';
 import 'core/router/app_router.dart';
 import 'firebase_options.dart';
+import 'package:smd_project/features/groups/domain/usecases/join_group.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +33,9 @@ void main() async {
 
   final messageRepository =
       MessageRepositoryImpl(firestore: FirebaseFirestore.instance);
+
+  final joinGroupUseCase = JoinGroup(groupRepository);
+
   // await SeedData.seedData();
 
   // Initialize storage based on platform
@@ -50,11 +54,15 @@ void main() async {
           create: (context) => AuthBloc(authRepository: authRepository),
         ),
         BlocProvider<GroupBloc>(
-          create: (context) => GroupBloc(groupRepository: groupRepository),
+          create: (context) => GroupBloc(
+            groupRepository: groupRepository,
+            joinGroupUseCase: joinGroupUseCase,
+          ),
         ),
         BlocProvider<MessagesBloc>(
-          create: (context) =>
-              MessagesBloc(messagesRepository: messageRepository),
+          create: (context) => MessagesBloc(
+            messagesRepository: messageRepository,
+          ),
         ),
       ],
       child: MyApp(),

@@ -3,7 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:smd_project/features/authentication/presentation/pages/login_page.dart';
 import 'package:smd_project/features/authentication/presentation/pages/signup_page.dart';
 import 'package:smd_project/features/authentication/presentation/pages/forgot_password_page.dart';
+import 'package:smd_project/features/groups/presentation/pages/join_group_page.dart';
 import 'package:smd_project/features/home/presentation/pages/home_page.dart';
+import 'package:smd_project/features/groups/presentation/pages/create_groups_page.dart';
+import 'package:smd_project/features/groups/presentation/pages/group_info_page.dart';
 
 final router = GoRouter(
   initialLocation: '/login',
@@ -44,5 +47,27 @@ final router = GoRouter(
       path: '/home',
       builder: (context, state) => const HomePage(),
     ),
+    GoRoute(
+      path: '/home/create-group',
+      builder: (context, state) => const CreateGroupPage(),
+    ),
+    GoRoute(
+      path: '/home/join-group',
+      builder: (context, state) {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user == null) {
+          // fallback if user is not logged in
+          return const LoginPage();
+        }
+        return JoinGroupScreen(userId: user.uid);
+      },
+    ),
+    // GoRoute(
+    //   path: '/home/group/:groupId',
+    //   builder: (context, state) {
+    //     final groupId = state.pathParameters['groupId']!;
+    //     return GroupDetailPage(groupId: groupId);
+    //   },
+    // ),
   ],
 );
