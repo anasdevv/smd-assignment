@@ -30,7 +30,43 @@ class GroupError extends GroupState {
   List<Object> get props => [message];
 }
 
+
+class GroupCreating extends GroupState {}
+
+
 class GroupCreated extends GroupState {}
+
+class GroupCreationError extends GroupState {
+  final String message;
+
+  const GroupCreationError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+
+class GroupJoining extends GroupState {}
+
+class GroupJoined extends GroupState {}
+
+class GroupJoinError extends GroupState {
+  final String message;
+
+  const GroupJoinError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+class GroupLoadedSingle extends GroupState {
+  final GroupEntity group;
+
+  const GroupLoadedSingle(this.group);
+
+  @override
+  List<Object> get props => [group];
+}
 
 class GroupUpdated extends GroupState {}
 

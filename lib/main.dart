@@ -13,6 +13,8 @@ import 'package:smd_project/features/groups/data/repositories/group_repository_i
 import 'package:smd_project/features/groups/presentation/bloc/groups_bloc.dart';
 import 'core/router/app_router.dart';
 import 'firebase_options.dart';
+import 'package:smd_project/features/groups/domain/usecases/join_group.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +28,9 @@ void main() async {
   );
   final groupRepository =
       GroupRepositoryImpl(firestore: FirebaseFirestore.instance);
+
+  final joinGroupUseCase = JoinGroup(groupRepository);
+
   // await SeedData.seedData();
 
   // Initialize storage based on platform
@@ -44,7 +49,10 @@ void main() async {
           create: (context) => AuthBloc(authRepository: authRepository),
         ),
         BlocProvider<GroupBloc>(
-          create: (context) => GroupBloc(groupRepository: groupRepository),
+          create: (context) => GroupBloc(
+            groupRepository: groupRepository,
+            joinGroupUseCase: joinGroupUseCase,
+          ),
         ),
       ],
       child: MyApp(),
