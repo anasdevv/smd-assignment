@@ -9,9 +9,7 @@ import 'package:smd_project/features/authentication/presentation/pages/user_sett
 import 'package:smd_project/features/groups/presentation/pages/join_group_by_code_page.dart';
 import 'package:smd_project/features/home/presentation/pages/home_page.dart';
 import 'package:smd_project/features/groups/presentation/pages/create_groups_page.dart';
-import 'package:smd_project/features/groups/presentation/pages/group_info_page.dart';
 import 'package:smd_project/features/groups/presentation/pages/group_details_page.dart';
-import 'package:smd_project/features/groups/domain/entities/group_entity.dart';
 import 'package:smd_project/features/groups/data/models/group_model.dart';
 
 final router = GoRouter(

@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smd_project/features/groups/domain/entities/group_entity.dart';
 import 'package:smd_project/features/groups/presentation/bloc/groups_bloc.dart';
 import 'package:smd_project/features/groups/presentation/bloc/groups_event.dart';
 import 'package:smd_project/features/groups/presentation/bloc/groups_state.dart';
-import 'package:smd_project/features/authentication/presentation/bloc/auth_bloc.dart';
-import 'package:smd_project/features/authentication/presentation/bloc/auth_event.dart';
-import 'package:smd_project/features/authentication/presentation/bloc/auth_state.dart';
-import 'package:go_router/go_router.dart';
-
 
 class JoinGroupScreen extends StatelessWidget {
   final String userId;
@@ -18,7 +12,8 @@ class JoinGroupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: BlocProvider.of<GroupBloc>(context)..add(GetAllGroupsEvent(userId)),
+      value: BlocProvider.of<GroupBloc>(context)
+        ..add(GetAllGroupsEvent(userId)),
       child: Scaffold(
         appBar: AppBar(title: Text("Join a Group")),
         body: BlocBuilder<GroupBloc, GroupState>(

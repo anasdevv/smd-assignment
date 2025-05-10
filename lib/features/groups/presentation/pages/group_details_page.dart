@@ -15,7 +15,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 class GroupDetailsPage extends StatefulWidget {
@@ -44,6 +43,9 @@ class _GroupDetailsPageState extends State<GroupDetailsPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    _tabController.addListener(() {
+      setState(() {}); // Rebuilds FAB when tab index changes
+    });
     _storageService = StorageService(
       supabase: Supabase.instance.client,
     );
@@ -115,7 +117,10 @@ class _GroupDetailsPageState extends State<GroupDetailsPage>
                 icon: Icon(Icons.chat),
                 text: 'Chats',
               ),
-              Tab(icon: Icon(Icons.info), text: 'Group Info')
+              Tab(
+                icon: Icon(Icons.info),
+                text: 'Group Info',
+              )
             ],
           ),
         ),
@@ -129,24 +134,26 @@ class _GroupDetailsPageState extends State<GroupDetailsPage>
           _buildGroupInfo(widget.group, context),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          if (_tabController.index == 0) {
-            _showCreateAnnouncementDialog();
-          } else if (_tabController == 1) {
-            _showUploadFileDialog();
-          } else if (_tabController == 2) {
-            _buildChatTab(widget.group.id);
-          } else {
-            _buildGroupInfo(widget.group, context);
-          }
-        },
-        icon: Icon(
-          _tabController.index == 0 ? Icons.announcement : Icons.upload_file,
-        ),
-        label: Text(
-            _tabController.index == 0 ? 'New Announcement' : 'Upload File'),
-      ),
+      floatingActionButton: (_tabController.index == 0)
+          // ||       _tabController.index == 1)
+          ? FloatingActionButton.extended(
+              onPressed: () {
+                if (_tabController.index == 0) {
+                  _showCreateAnnouncementDialog();
+                } else if (_tabController.index == 1) {
+                  // _showUploadFileDialog();
+                }
+              },
+              icon: Icon(
+                _tabController.index == 0
+                    ? Icons.announcement
+                    : Icons.upload_file,
+              ),
+              label: Text(_tabController.index == 0
+                  ? 'New Announcement'
+                  : 'Upload File'),
+            )
+          : null,
     );
   }
 
@@ -904,9 +911,7 @@ class _GroupDetailsPageState extends State<GroupDetailsPage>
             icon: const Icon(Icons.download, size: 16),
             onPressed: () async {
               final fileUrl = await _storageService.getFileUrl(url);
-              if (fileUrl != null) {
-                await launchUrl(Uri.parse(fileUrl));
-              }
+              await launchUrl(Uri.parse(fileUrl));
             },
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
@@ -923,7 +928,7 @@ Widget _buildChatTab(groupId) {
   );
 }
 
-Widget _buildGroupInfo(group, context) {
+Widget _buildGroupInfo(GroupEntity group, context) {
   return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -938,6 +943,14 @@ Widget _buildGroupInfo(group, context) {
             fontSize: 14,
             color: Theme.of(context).colorScheme.secondary,
           ),
+        ),
+        Text(
+          group.description,
+          style: TextStyle(
+            fontSize: 14,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          textAlign: TextAlign.center,
         ),
         Text(
           'Group ID: ${group.id}',
