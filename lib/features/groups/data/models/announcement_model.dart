@@ -53,6 +53,6 @@ class AnnouncementModel extends AnnouncementEntity {
         createdBy: createdBy,
         createdAt: createdAt,
         attachments: attachments ?? this.attachments,
-        createdById: createdById ?? this.createdById);
+        createdById: createdById);
   }
 }

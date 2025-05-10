@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:smd_project/features/authentication/data/models/user_model.dart';
 import 'package:smd_project/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:smd_project/features/authentication/presentation/bloc/auth_state.dart';
 import 'package:smd_project/features/authentication/presentation/bloc/auth_event.dart';

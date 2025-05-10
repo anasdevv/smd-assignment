@@ -62,7 +62,7 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(title: const Text("Chat")),
       body: Padding(
-        padding: const EdgeInsets.all(96.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             Expanded(
