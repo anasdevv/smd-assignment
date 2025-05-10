@@ -7,8 +7,25 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<UserCredential> signInWithEmailAndPassword(
       String email, String password) async {
-    return await _auth.signInWithEmailAndPassword(
-        email: email, password: password);
+    try {
+      return await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'invalid-email':
+          throw Exception('Invalid email format.');
+        case 'user-disabled':
+          throw Exception('This account has been disabled.');
+        case 'user-not-found':
+        case 'wrong-password':
+        case 'invalid-credential':
+          throw Exception('Invalid email or password.');
+        default:
+          throw Exception('An unexpected error occurred. Please try again.');
+      }
+    }
   }
 
   @override

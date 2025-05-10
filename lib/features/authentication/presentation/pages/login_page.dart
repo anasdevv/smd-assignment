@@ -44,17 +44,24 @@ class _LoginPageState extends State<LoginPage> {
         listener: (context, state) {
           if (state is AuthError) {
             String errorMessage = state.message;
-            // Format Firebase error messages to be more user-friendly
-            if (errorMessage.contains('user-not-found')) {
+
+            if (errorMessage.contains('invalid-email')) {
+              errorMessage = 'Invalid email format.';
+            } else if (errorMessage.contains('user-not-found')) {
               errorMessage = 'No account found with this email address.';
-            } else if (errorMessage.contains('wrong-password')) {
-              errorMessage = 'Incorrect password. Please try again.';
+            } else if (errorMessage.contains('wrong-password') ||
+                errorMessage.contains('invalid-credential')) {
+              errorMessage = 'Invalid email or password.';
+            } else if (errorMessage.contains('user-disabled')) {
+              errorMessage = 'Your account has been disabled.';
             } else if (errorMessage.contains('too-many-requests')) {
               errorMessage =
                   'Too many failed attempts. Please try again later.';
             } else if (errorMessage.contains('network-request-failed')) {
               errorMessage =
                   'Network error. Please check your internet connection.';
+            } else {
+              errorMessage = 'An unexpected error occurred. Please try again.';
             }
 
             ScaffoldMessenger.of(context).showSnackBar(
